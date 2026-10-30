@@ -61,16 +61,27 @@ Read RSS inside DeepSeek Harness and discuss the current article in its native A
 
 ## 安装
 
-支持 DeepSeek Harness 0.2.1-rc.2 / 0.2.1-rc.3；本次实测 rc.3。下载 [v0.9.2 Release](https://github.com/joeseesun/qiaomu-rss-dsh/releases/tag/v0.9.2) 中的 `.tgz` 和同名 `.sha256` 文件，在下载目录执行：
+上游 v0.9.2 的版本声明支持 DeepSeek Harness 0.2.1-rc.2 / 0.2.1-rc.3。本 [fork](https://github.com/cpp-wen/qiaomu-rss-dsh/tree/codex/rc5-compatibility) 的 `0.9.3-rc5.1` 精确增加 `0.2.1-rc.5`，不豁免版本检查。
+
+在源码目录构建安装包：
 
 ```bash
-shasum -a 256 -c qiaomu-rss-dsh-0.9.2.tgz.sha256
-dsh plugin --profile desktop add "$PWD/qiaomu-rss-dsh-0.9.2.tgz"
+npm ci
+npm run check
+npm pack
 ```
 
-使用命令行 Web 界面时，把 `desktop` 换为 `web`。安装后重启对应的 Harness profile，在侧边栏打开「乔木 RSS」。[官方插件安装说明](https://github.com/deepseek-ai/deepseek-harness/blob/master/docs/user/develop/basic/publish.md)介绍了 bundle 与 profile 的关系。插件依赖 Harness 已配置的模型与账号；默认无需再选工作区。
+**Desktop rc.5：** 在桌面应用的插件管理器中安装生成的 `qiaomu-rss-dsh-0.9.3-rc5.1.tgz`（填写本机绝对路径）。`desktop` profile 由 Electron 管理，不能使用 `dsh plugin --profile desktop add`。
 
-本次修正旧包锁定 rc2 导致 rc3 拒装的问题，无需开启版本豁免。安装、阅读、伴读和未覆盖范围见 [rc3 验证记录](docs/RC3-COMPATIBILITY.md)。
+**Web：** 使用官方 CLI 安装：
+
+```bash
+dsh plugin --profile web add "$PWD/qiaomu-rss-dsh-0.9.3-rc5.1.tgz"
+```
+
+安装后按宿主提示重载或重启，在侧边栏打开「乔木 RSS」。AI 伴读使用 Harness 已配置的模型与账号。已有阅读数据继续使用原来的插件存储。
+
+rc.5 已验证隔离安装、启动、真实文章阅读与原生伴读面板挂载；未发送付费模型请求。完整验证范围见 [rc5 兼容性记录](docs/RC5-COMPATIBILITY.md)。
 
 ## 开发
 
@@ -111,6 +122,6 @@ The [live desktop screenshots](#真实界面) show a real feed, the rewritten re
 
 Qiaomu RSS brings curated and personal RSS/Atom feeds into DeepSeek Harness. Read the original, translated, or rewritten article; manage unread items and favorites; import/export OPML; and open a native Harness AI conversation beside the article with its reading context attached. The companion opens directly in the default workspace. The article/chat divider is resizable.
 
-This is an open-source community plugin, not maintained or endorsed by DeepSeek. A prebuilt tarball is available from [GitHub Releases](https://github.com/joeseesun/qiaomu-rss-dsh/releases); it is not published to npm. With the DeepSeek Harness 0.2.1-rc.3 CLI, download the `.tgz` and `.sha256` files, verify them with `shasum -a 256 -c qiaomu-rss-dsh-0.9.2.tgz.sha256`, then run `dsh plugin --profile desktop add /absolute/path/to/qiaomu-rss-dsh-0.9.2.tgz` and restart the profile. Use `web` instead of `desktop` for the Web profile. The previous package was installed and booted in an isolated Web profile, and its Desktop reading and AI-companion flow was checked in the installed app. This release workflow also verified an isolated package install, host boot, real article loading, switching to an existing rewritten version, and subscription discovery. For v0.6.0, selected-passage translation was exercised in the Desktop native conversation: the answer translated the selected passage only. The selected passage appears inside the composer as an expandable, removable quote; the article supplies background context. Labs can submit public web links for collection and rewrites with a verified invitation. Requests persist across restarts, support progress tracking and retry, and open completed results in the reader. Submitted links and generated rewrites are publicly collected by the configured Qiaomu service. Invitation and instance credentials stay in Host storage; no Agent submission tool or administrator interface is exposed. Podcast discovery can import existing full transcripts from the public Podscribe catalog. For development, use Node.js 22+ and run `npm ci`, `npm run build`, and `npm test`. The generated `lib/` files are committed because the DSH bundle loads them.
+This is an open-source community plugin, not maintained or endorsed by DeepSeek. The fork build `0.9.3-rc5.1` adds exactly DeepSeek Harness `0.2.1-rc.5` to the upstream rc.2/rc.3 compatibility range. Build with `npm ci`, `npm run check`, and `npm pack`. On Desktop rc.5, install the resulting local tarball through the application's plugin manager; the CLI cannot manage the Electron-owned `desktop` profile. Web users can run `dsh plugin --profile web add /absolute/path/to/qiaomu-rss-dsh-0.9.3-rc5.1.tgz`. Isolated rc.5 installation, startup, real article reading and native AI-companion panel mounting were verified. No paid model request was sent. See [validation details](docs/RC5-COMPATIBILITY.md).
 
 Reading data lives in the user's Harness home under `storages/qiaomu-rss/data.json`, outside this repository. The curated feed uses the public [Qiaomu AI RSS](https://github.com/joeseesun/qiaomu-ai-rss) API. AI conversations use the host's configured model and account. Obsidian note, highlight-saving, and daily-note features are intentionally absent. Source is licensed under [GPL-3.0-only](LICENSE); the bundled blog list retains its separate MIT notice.
