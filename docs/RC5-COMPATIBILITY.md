@@ -22,7 +22,10 @@
 - 在同一临时 profile 执行 `dsh --profile web --no-open --host 127.0.0.1 --port 0`，服务成功监听随机本地端口；进程由 12 秒超时停止，日志没有插件加载错误。
 
 - 在隔离 Web 界面打开真实文章，确认中文改写正文显示；打开 AI 伴读后，当前文章标题、原生输入框、模型选择器和快捷提示词均正常挂载。未发送模型请求。
-- Desktop rc.5 的 profile 由 Electron 独占管理；桌面安装应使用应用的插件管理器，而不是 `dsh plugin --profile desktop`。
+- 当前 macOS rc.5 自带的 `dsh-desktop-host/lib/cli.js` 通过 `runCli({ manageDesktopProfile: true })` 支持 desktop profile。已使用应用内置 CLI 完成真实 Desktop 安装（2.7 秒），官方兼容检查通过，bundle 自动启用，原有 RSS 数据保持不变。
+- 本次桌面 GUI 安装进程曾停滞并报 `Failed to fetch`；经官方取消恢复原配置后，改用上述官方 CLI 成功。未调用版本豁免，也未手改 profile manifest。
+
+- 真实 Desktop 通过 OPML 预览并导入 23 个文章订阅，5 个分组成功保留；已核对持久化订阅的 URL、名称和分组与导入文件一致。订阅文件与个人阅读数据不包含在仓库中。
 
 ## 验证边界
 
